@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { getAllPosts } from "../../services/postService";
 
 /*
  * Make all necessary imports.
@@ -7,7 +8,13 @@ import Head from "next/head";
  * Render the data.
  */
 
-export default function Posts() {
+export async function getStaticProps() {
+  const posts = await getAllPosts();
+
+  return { props: { posts: posts } };
+}
+
+export default function Posts({ posts }) {
   return (
     <>
       <Head>
@@ -15,7 +22,13 @@ export default function Posts() {
       </Head>
       <h1>All Posts</h1>
       <p>List of all posts</p>
-      <ul></ul>
+      <ul>
+        {posts.map((post) => (
+          <li key={post.id}>
+            Name: {post.name} - Description: {post.description}
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
